@@ -5,6 +5,9 @@ LOG_MODULE_REGISTER(CADC, LOG_LEVEL_INF);
 static struct adc_sequence sequence;
 static uint16_t adc_buffer;
 
+
+struct adc_values_t adc_values = {0, 0}; 
+
 //TODO optimization of the error codes within function
 /**
  * @brief 
@@ -45,7 +48,8 @@ void initADC(void){
 }
 
 /**
- * @brief  
+ * @brief This function is responsible to read and convert values if changed. 
+ * Raw and converted values are stored in adc_values_t
  * 
  */
 void readADC(void){
@@ -65,7 +69,11 @@ void readADC(void){
         else{
             int32_t val_temp;
             convert_mv_to_temp_LM35(&val_mv, &val_temp);
-            LOG_INF("ADC value: %d mV | Degrees Celsius: %d", val_mv, val_temp);
+            if(adc_values.temp_in_C != val_temp){
+                adc_values.temp_in_mv = val_mv;
+                adc_values.temp_in_C = val_temp;
+                LOG_INF("ADC value: %d mV | Degrees Celsius: %d", val_mv, val_temp);
+            } 
         }
     }
 

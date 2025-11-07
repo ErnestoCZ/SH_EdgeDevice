@@ -5,7 +5,7 @@
 #include <zephyr/device.h>
 #include <zephyr/devicetree.h>
 #include <zephyr/drivers/adc.h>
-
+#include "cstructs.h"
 // LOG_MODULE_REGISTER(CADC, LOG_LEVEL_DBG);
 
 //Structures
