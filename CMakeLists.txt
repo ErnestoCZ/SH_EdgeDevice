@@ -9,3 +9,4 @@ add_subdirectory(src/customCPP)
 project(SmartHome_EdgeDevice LANGUAGES C CXX)
 
 target_sources(app PRIVATE src/main.c)
+target_link_libraries(app PRIVATE custom_lib)
