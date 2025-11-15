@@ -9,4 +9,5 @@ add_subdirectory(src/customCPP)
 project(SmartHome_EdgeDevice LANGUAGES C CXX)
 
 target_sources(app PRIVATE src/main.c)
-target_link_libraries(app PRIVATE custom_lib)
+target_link_libraries(app PUBLIC custom_lib)
+zephyr_library_include_directories(.)

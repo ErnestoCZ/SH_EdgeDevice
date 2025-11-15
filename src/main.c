@@ -36,7 +36,9 @@ void advertising_start(void){
 }
 int main(void)
 {
+  _init_cgattc();
   LOG_INF ("Device is starting...");
+
   int ret = 0;
 
   ret = bt_enable (NULL);
