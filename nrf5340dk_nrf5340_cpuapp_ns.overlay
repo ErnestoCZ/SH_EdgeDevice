@@ -28,10 +28,19 @@
     };
 };
 
+
 / {
     zephyr,user {
         io-channels = <&adc 0>;
     };
+    aliases {
+        led-device-status = &led0;
+    };
+};
+
+&led0 {
+    label = "Device Status LED";
+    // gpios = <&gpio0 28 GPIO_ACTIVE_HIGH>;
 };
 
 // Other unused peripherals by me

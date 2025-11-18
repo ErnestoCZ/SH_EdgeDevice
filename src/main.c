@@ -9,6 +9,7 @@
 LOG_MODULE_REGISTER (Smarthome_EdgeDevice, LOG_LEVEL_INF);
 #include "cadc.h"
 #include "cgatt.h"
+#include "cgpio.h"
 
 // EXTERN
 extern struct bt_conn_cb bt_connection_callbacks;
@@ -37,9 +38,12 @@ void advertising_start(void){
 int main(void)
 {
   _init_cgattc();
+
   LOG_INF ("Device is starting...");
 
   int ret = 0;
+  ret = init_gpio();
+  if(ret) LOG_ERR("init_gpio() failed!");
 
   ret = bt_enable (NULL);
 
