@@ -24,8 +24,7 @@ BT_GATT_SERVICE_DEFINE (
     BT_GATT_CHARACTERISTIC (BT_UUID_HIDP,
                             BT_GATT_CHRC_READ | BT_GATT_CHRC_WRITE,
                             BT_GATT_PERM_READ | BT_GATT_PERM_WRITE, read_custom_data_cb, write_custom_data_cb,
-                            NULL),
-                            BT_GATT_CCC(led_state_changed_cb,BT_GATT_PERM_READ|BT_GATT_PERM_WRITE);
+                            NULL)
                           );
 
 ssize_t
