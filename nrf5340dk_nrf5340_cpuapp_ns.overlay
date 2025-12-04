@@ -51,6 +51,10 @@
 &led0 {
     gpios = <&gpio0 28 1>;
 };
+&uart1 {
+    status = "okay";
+};
+
 
 &qspi {
     status = "disabled";
