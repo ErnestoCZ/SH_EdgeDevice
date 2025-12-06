@@ -1,10 +1,26 @@
 #include "cadc.h"
-
+#include <stdlib.h>
+#include <zephyr/drivers/adc/adc_emul.h>
 LOG_MODULE_REGISTER(CADC, LOG_LEVEL_INF);
 
 static struct adc_sequence sequence;
 static uint16_t adc_buffer;
+struct value_range_t {
+    int32_t from;
+    int32_t to;
+};
 
+const int adc_emul_function(const struct device *dev, unsigned int chan,
+                               void *data, uint32_t *result)
+{
+    ARG_UNUSED(dev);
+    ARG_UNUSED(chan);
+
+    // struct value_range_t *range = (struct value_range_t *)data;
+    srand(k_cycle_get_32());
+    *result = rand() % 300;
+    return 0;
+}
 
 struct adc_values_t adc_values = {0, 0}; 
 
@@ -37,6 +53,7 @@ void initADC(void){
     sequence.buffer = &adc_buffer;
     sequence.buffer_size = sizeof(adc_buffer);
     sequence.resolution = adc_channel_temperature.resolution;
+    
 
     if(adc_sequence_init_dt(&adc_channel_temperature, &sequence)){
         LOG_ERR("Failed to initialize sequence");
@@ -44,6 +61,12 @@ void initADC(void){
     }else{
         LOG_INF("Sequence initialized");
     };
+    static struct value_range_t adc_mv_range = {
+        .from = 0,
+        .to = 1000,
+    };
+    adc_emul_value_func_set(adc_channel_temperature.dev, adc_channel_temperature.channel_id, adc_emul_function, &adc_mv_range);
+    
 
 }
 
@@ -69,11 +92,11 @@ void readADC(void){
         else{
             int32_t val_temp;
             convert_mv_to_temp_LM35(&val_mv, &val_temp);
-            if(adc_values.temp_in_C != val_temp){
+            // if(adc_values.temp_in_C != val_temp){
                 adc_values.temp_in_mv = val_mv;
                 adc_values.temp_in_C = val_temp;
                 LOG_INF("ADC value: %d mV | Degrees Celsius: %d", val_mv, val_temp);
-            } 
+            // } 
         }
     }
 

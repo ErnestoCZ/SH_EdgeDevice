@@ -38,13 +38,35 @@
 };
 
 
+
+
 / {
     zephyr,user {
-        io-channels = <&adc 0 &adc 1>;
+        io-channels = <&emul_adc 0>;
     };
     aliases {
         led-device-status = &led0;
         led-adv-status = &led1;
+    };
+    emul_adc: adc-emul {
+        compatible = "zephyr,adc-emul";
+        nchannels = <1>; /* Define 2 channels */
+        #io-channel-cells = <1>;
+        status = "okay";
+        /* Define reference voltages (required for the emulator logic) */
+        ref-internal-mv = <3300>; 
+        #address-cells = <1>;
+        #size-cells = <0>;
+        
+        channel@0{
+        reg = <0>;
+        zephyr,gain = "ADC_GAIN_1_6";
+        zephyr,reference = "ADC_REF_INTERNAL";
+        zephyr,acquisition-time = <ADC_ACQ_TIME_DEFAULT>;
+		zephyr,input-positive = <NRF_SAADC_AIN0>; /* P0.02 for nRF52xx, P0.04 for nRF53xx */
+		zephyr,resolution = <12>;
+
+        };
     };
 };
 
@@ -52,7 +74,7 @@
     gpios = <&gpio0 28 1>;
 };
 &uart1 {
-    status = "okay";
+    status = "disabled";
 };
 
 
@@ -75,3 +97,28 @@
     status = "disabled";
 };
 
+
+&uart2 {
+    status = "okay";
+    current-speed = <115200>;
+    parity = "none";    
+    stop-bits = "1";
+    data-bits = <8>;
+    pinctrl-0 = <&uart2_default>;
+    pinctrl-1 = <&uart2_sleep>;
+    pinctrl-names = "default", "sleep";
+};
+
+&pinctrl {
+    uart2_default: uart2_default {
+        group1 {
+            psels = <NRF_PSEL(UART_TX, 0, 12)>, <NRF_PSEL(UART_RX, 0, 13)>;
+        };
+    };
+
+    uart2_sleep: uart2_sleep {
+        group1 {
+            psels = <NRF_PSEL(UART_TX, 0, 12)>;
+        };
+    };
+};
