@@ -10,7 +10,7 @@ struct value_range_t {
     int32_t to;
 };
 
-const int adc_emul_function(const struct device *dev, unsigned int chan,
+int adc_emul_function(const struct device *dev, unsigned int chan,
                                void *data, uint32_t *result)
 {
     ARG_UNUSED(dev);
